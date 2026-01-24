@@ -211,8 +211,8 @@ export default function Postdetailes() {
             <button className="flex flex-row justify-center items-center w-full space-x-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width={27}
-                height={27}
+                width={20}
+                height={20}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#838383"
@@ -227,8 +227,8 @@ export default function Postdetailes() {
             <button className="flex flex-row justify-center items-center w-full space-x-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width={27}
-                height={27}
+                width={20}
+                height={20}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#838383"
@@ -243,8 +243,8 @@ export default function Postdetailes() {
             <button className="flex flex-row justify-center items-center w-full space-x-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width={27}
-                height={27}
+                width={20}
+                height={20}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#838383"

@@ -57,7 +57,7 @@ export default function Login() {
       </Helmet>
       <div className='py-10 min-w-md rounded-2xl bg-white shadow-2xl '>
         <h1 className='text-center text-2xl mb-5'>Login</h1>
-        <form onSubmit={handleSubmit(sendData)} className='flex flex-col gap-4 px-4' >
+        <form onSubmit={handleSubmit(sendData)} className='flex flex-col gap-4 px-12 sm:px-4' >
             <Input variant='bordered' errorMessage={errors.email?.message} isInvalid={Boolean(errors.email) && touchedFields.email }  label="Email" type="email" {...register("email" ,{required:"Email is required"})} />
             <Input variant='bordered' errorMessage={errors.password?.message} isInvalid={Boolean(errors.password) && touchedFields.password} label="Password" type="password" {...register("password")} />
             <Button isLoading={load} type='submit'>Login</Button>

@@ -47,7 +47,7 @@ export default function Nav() {
     <>
     
     <div className='bg-black   z-10 py-4'>
-      <div className="container mx-auto  flex justify-between items-center">
+      <div className="container mx-auto px-7 sm:px-2 flex justify-between items-center">
         <Link to={"/"}><h2 className='text-white text-3xl font-bold'>SocialApp</h2></Link>        
         <div>
           <ul className='text-white flex items-center gap-5'>

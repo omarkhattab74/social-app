@@ -61,7 +61,7 @@ export default function Register() {
       </Helmet>
       <div className='bg-white py-10 shadow-2xl rounded-2xl min-w-md'>
         <h1 className='text-2xl text-center mb-4'>Register Now</h1>
-        <form onSubmit={handleSubmit(sendData)} className='flex flex-col gap-4 px-4'>
+        <form onSubmit={handleSubmit(sendData)} className='flex flex-col gap-4 px-12 sm:px-4'>
           <Input label="Name" type="text" isInvalid={Boolean(errors.name && touchedFields.name)} errorMessage={errors.name?.message} variant='bordered' {...register("name")} />
           <Input label="Email" type="email" isInvalid={Boolean(errors.email && touchedFields.email)} errorMessage={errors.email?.message} variant='bordered' {...register("email")} />
           <Input label="Password" type="password" isInvalid={Boolean(errors.password && touchedFields.password)} errorMessage={errors.password?.message} variant='bordered' {...register("password")} />
