@@ -1,0 +1,75 @@
+@import "tailwindcss";
+@plugin './hero.js';
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+
+
+.skeleton-post {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin: 20px auto;
+  border-radius: 20px;
+}
+
+.skeleton-header {
+  display: flex;
+  gap: 10px;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  background: #e0e0e0;
+  border-radius: 50%;
+}
+
+.skeleton-lines .line {
+  height: 10px;
+  background: #e0e0e0;
+  margin-bottom: 6px;
+}
+
+.short {
+  width: 100px;
+}
+
+.long {
+  width: 200px;
+}
+
+.skeleton-image {
+  height: 400px;
+  background: #e0e0e0;
+  margin-top: 10px;
+}
+
+.skeleton-post div {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+.loader {
+    width: 10px;
+    height: 10px;
+    border: 2px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 
