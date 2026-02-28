@@ -36,10 +36,8 @@ export default function Login() {
     setLoad(true)
     const res = await login(loginData)
     setLoad(false)
-    console.log(res);
 
     if (res.message === "signed in successfully") {
-       console.log(res.data.token);
       navigate("/")
       localStorage.setItem("userToken", res.data.token)
       setToken(res.data.token)

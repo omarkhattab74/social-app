@@ -2,29 +2,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { userToken } from '../context/Tokencontext'
 import { userdata } from '../context/Userdtacontext'
-import axios from 'axios'
 
 
 export default function Nav() {
   const { token, setToken } = useContext(userToken)
   const  {getUserdata, userdetailes, setUserDetailes}  = useContext(userdata)  
-  let [userdetail,setUserdetail] = useState("")
   const navigate = useNavigate()
 
-  //  async function getUserdata() {
-  //       try {
-  //           const { data } = await axios.get("https://linked-posts.routemisr.com/users/profile-data", {
-  //               headers: {
-  //                   token: localStorage.getItem("userToken")
-  //               }
-  //           })
-  //           setUserdetail(data?.user)
-  //       } catch (error) {
-  //           console.log(error);
-  //           return error
-  //       }
-  //   }
-
+  
    async function getUserDataa(){
      await getUserdata()
     }

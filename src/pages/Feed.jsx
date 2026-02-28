@@ -31,7 +31,6 @@ export default function Feed() {
 
   async function getAllPosts() {
     let res = await getPosts()
-    console.log(res.data.data.posts);
 
     setPosts(res.data.data.posts)
   }
@@ -52,7 +51,6 @@ export default function Feed() {
     }
     setCreateCommentLoading(true)
     const response = await createComment(formdata, postid)
-    console.log(response);
 
 
     if (response?.statusText === "Created") {
@@ -66,7 +64,6 @@ export default function Feed() {
 
   async function getPostCommentss(id) {
     const response = await getPostComments(id)
-    console.log(response.data.comments);
     setPostComments(response?.data.comments)
 
   }
@@ -135,7 +132,6 @@ export default function Feed() {
 
         {posts?.map((data) =>
 
-          // <h1>hello</h1>
           <div key={data.id} className="bg-white w-full rounded-md shadow-md h-auto py-3 px-3 my-5">
             <div className="w-full h-16 flex items-center  justify-between ">
               <div className="flex">
@@ -314,7 +310,6 @@ export default function Feed() {
 
                 {postComments.map((comm) =>
                   <>
-                    {/* <h1>omar</h1> */}
                    <div className='bg-white p-3 rounded-2xl'>
                      <div className='flex justify-between items-center rounded-xl '>
 
@@ -383,69 +378,6 @@ export default function Feed() {
 
 
                 )}
-
-                {/* <div className='flex justify-between items-center'>
-
-
-                  <div className="flex py-2">
-
-
-                    <img onError={(e) => e.target.src = commentImg}
-                      className=" rounded-full w-10 h-10 mr-3"
-                      src={data?.comments[0]?.commentCreator?.photo}
-                      alt=""
-                    />
-                    <div>
-                      <h3 className="text-md font-semibold ">{data.comments[0].commentCreator.name}</h3>
-                      <p className="text-xs text-gray-500">{new Date(data.comments[0].createdAt).toLocaleString()}</p>
-                    </div>
-                  </div>
-
-                  {data.comments[0].commentCreator._id === userdetailes._id && data.user._id === userdetailes._id && <Dropdown>
-                    <DropdownTrigger>
-                      <svg
-                        className="w-16 cursor-pointer outline-none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={27}
-                        height={27}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#b0b0b0"
-                        strokeWidth={2}
-                        strokeLinecap="square"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx={12} cy={12} r={1} />
-                        <circle cx={19} cy={12} r={1} />
-                        <circle cx={5} cy={12} r={1} />
-                      </svg>
-                    </DropdownTrigger>
-                    <DropdownMenu aria-label="Static  Actions">
-
-                      <DropdownItem onClick={() => handleEditInput(data?.comments[0]._id, data?.comments[0]?.content)} key="edit" >Edit </DropdownItem>
-                      <DropdownItem key="delete" className="text-danger" onClick={() => deletecommentt(data?.comments[0]._id)} color="danger">
-                        Delete
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>}
-
-
-                </div>
-
-                <p className='px-11'>{data?.comments[0]?.content}</p>
-                {data?.comments[0]._id === commentId && <Form onSubmit={() => updateComment(data?.comments[0]._id, editinput)} className='flex gap-2 items-center my-2'>
-                  <Input
-                    type='text'
-
-                    variant='bordered'
-                    value={editinput}
-                    onChange={(e) => setEditinput(e.target.value)}
-
-                  />
-                  <Button type="submit" className='bg-primary text-white'>  Update</Button>
-                </Form>} */}
-
-
 
               </div>}
           </div>

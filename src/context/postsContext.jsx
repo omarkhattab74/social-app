@@ -12,12 +12,10 @@ export function Postscontextprovider(props) {
                     token: localStorage.getItem("userToken")
                 }
             })
-            // console.log(response.data.posts);
             return response
 
 
         } catch (error) {
-            // console.log(error);
             return error
 
         }

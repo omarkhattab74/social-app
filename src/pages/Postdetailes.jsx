@@ -20,7 +20,6 @@ export default function Postdetailes() {
   const { getUserdata, userdetailes } = useContext(userdata)
   let [commentId, setCommentid] = useState(null)
   let [editinput, setEditinput] = useState("")
-  let [design, setDesign] = useState(true)
   let [postComments, setPostComments] = useState([])
   let [creatCommentLoading, setCreateCommentloading] = useState(false)
   let [updateCommentLoading, setUpdateCommentloading] = useState(false)
@@ -36,11 +35,9 @@ export default function Postdetailes() {
       })
 
 
-      console.log("from post detailes", response.data?.data.post);
 
       setPostdetailes(response.data?.data.post)
     } catch (error) {
-      console.log(error);
 
     }
   }
@@ -52,7 +49,6 @@ export default function Postdetailes() {
 
   async function getPostCommentss(x) {
     const comments = await getPostComments(x.id)
-    console.log("from post detailesssssss", comments);
     setPostComments(comments?.data.comments)
 
   }

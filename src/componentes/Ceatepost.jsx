@@ -34,7 +34,6 @@ export default function Ceatepost({ callback }) {
           token: localStorage.getItem("userToken")
         }
       })
-      console.log(data);
       
       if (data.message === "post created successfully") {
         callback()
@@ -47,7 +46,6 @@ export default function Ceatepost({ callback }) {
 
 
     } catch (error) {
-      console.log(error);
       toast.error("something went wrong . please try again")
         setIsloading(false)
 

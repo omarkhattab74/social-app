@@ -16,19 +16,14 @@ export default function Userdtacontextprovider(props) {
                     token: localStorage.getItem("userToken")
                 }
             })
-            console.log(data.data);
 
             setUserDetailes(data?.data.user)
-            // return data.user
         } catch (error) {
-            console.log(error);
-            // return error
         }
     }
 
     async function getuserdetails() {
         const user = await getUserdata()
-        // console.log(userdetailes);
 
     }
 
@@ -44,15 +39,7 @@ export default function Userdtacontextprovider(props) {
         
     },[] )
 
-    // useEffect(() => {
-       
-    //     if (islogedin) {
-            
-    //         getuserdetails()
-    //     }
-
-        
-    // },[islogedin] )
+    
 
 
 

@@ -8,36 +8,10 @@ export default function Profile() {
 
   const {getUserdata, userdetailes, setUserDetailes} =useContext(userdata)
 
-  // const { userdetailes, getUserdata } = useContext(userdata)
-  // const [userdetailess, setUserdetailess] = useState("")
+ 
   const [image, setImage] = useState("")
   const [imageurl, setImageurl] = useState(null)
   let [isLoading, setIsloading] = useState(false)
-
-  // async function getUserdata() {
-  //       try {
-  //           const { data } = await axios.get("https://linked-posts.routemisr.com/users/profile-data", {
-  //               headers: {
-  //                   token: localStorage.getItem("userToken")
-  //               }
-  //           })
-  //           setUserdetailess(data.user)
-  //           // return data.user
-  //       } catch (error) {
-  //           console.log(error);
-  //           return error
-  //       }
-  //   }
-
-  //  async function getUserDataa(){
-  //    await getUserdata()
-  //   }
-
-    // useEffect(()=>{
-    //   getUserDataa()
-    // },[])
-
-    console.log("frpm profile", userdetailes);
     
   function handleImage(e) {
     setImage(e.target.files[0])
@@ -68,7 +42,6 @@ export default function Profile() {
       setIsloading(false)
 
     } catch (error) {
-      console.log(error);
       toast.error("something went wrong . please try again")
       setIsloading(false)
 

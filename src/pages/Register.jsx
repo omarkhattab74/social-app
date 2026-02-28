@@ -1,6 +1,5 @@
 import { Button, Input, Select, SelectItem } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod';
-import { p } from 'framer-motion/client';
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import * as zod from "zod"
@@ -50,7 +49,6 @@ export default function Register() {
     setLoad(true)
     const res = await signUp(data)
     setLoad(false)
-    // console.log(res);
     
     if (res.message === "account created") {
       navigate("/login")
