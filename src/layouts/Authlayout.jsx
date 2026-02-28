@@ -6,7 +6,7 @@ export default function Authlayout() {
   return (
     <>
      <Nav/>
-    <div className='flex justify-center items-center bg-gray-200 h-screen'>
+    <div className='flex justify-center items-center min-h-screen bg-gray-200'>
       <Outlet/>
     </div>
     </>

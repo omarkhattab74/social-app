@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 
 export async function deletePost(id) {
     try {
-        const { data } = await axios.delete(`https://linked-posts.routemisr.com/posts/${id}`,
+        const { data } = await axios.delete(`https://route-posts.routemisr.com/posts/${id}`,
             {
                 headers: {
                     token: localStorage.getItem("userToken")

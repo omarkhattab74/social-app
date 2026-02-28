@@ -3,20 +3,26 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Postscontext } from './../context/postsContext';
 import { Form, Link } from 'react-router-dom';
 import commentImg from '../assets/images.png'
-import { createComment, deleteComment, editComment } from '../services/commentservices';
+import { createComment, deleteComment, editComment, getPostComments } from '../services/commentservices';
 import Ceatepost from '../componentes/Ceatepost';
 import { userdata } from '../context/Userdtacontext';
 import { deletePost } from '../services/deletePost';
 import toast from 'react-hot-toast';
 import { Helmet } from 'react-helmet';
+import Loadingbutton from './../componentes/Loadingbutton';
 
 
 export default function Feed() {
+  let x = ["1", "2", "3", "4"]
   const [comment, setComment] = useState("")
   let [posts, setPosts] = useState([])
   let [commentId, setCommentid] = useState(null)
   let [editinput, setEditinput] = useState("")
-  let [isLoading, setIsloading] = useState(false)
+  let [postId, setPostid] = useState("")
+  let [postComments, setPostComments] = useState([])
+  let [createCommentLoading, setCreateCommentLoading] = useState(false)
+  let [updateCommentLoading, setUpdateCommentLoading] = useState(false)
+
 
 
 
@@ -25,7 +31,9 @@ export default function Feed() {
 
   async function getAllPosts() {
     let res = await getPosts()
-    setPosts(res)
+    console.log(res.data.data.posts);
+
+    setPosts(res.data.data.posts)
   }
 
   function getAllPostss() {
@@ -36,22 +44,37 @@ export default function Feed() {
   useEffect(() => {
     getAllPostss()
   }, [])
-  let x = ["1", "2", "3", "4"]
   async function createNewComment(comment, postid) {
-    setIsloading(true)
-    const response = await createComment(comment, postid)
+    const formdata = new FormData()
+    if (comment) {
+      formdata.append("content", comment)
 
-    if (response?.data.message === "success") {
+    }
+    setCreateCommentLoading(true)
+    const response = await createComment(formdata, postid)
+    console.log(response);
+
+
+    if (response?.statusText === "Created") {
       getAllPosts()
       setComment("")
-      setIsloading(false)
+      setCreateCommentLoading(false)
+      getPostCommentss(postId)
     }
+    setCreateCommentLoading(false)
   }
 
-  async function deletecommentt(id) {
+  async function getPostCommentss(id) {
+    const response = await getPostComments(id)
+    console.log(response.data.comments);
+    setPostComments(response?.data.comments)
+
+  }
+
+  async function deletecommentt(id, postId) {
     setIsloading(true)
-    await deleteComment(id)
-    getAllPosts()
+    await deleteComment(id, postId)
+    getPostCommentss(postId)
     setIsloading(false)
   }
 
@@ -60,16 +83,22 @@ export default function Feed() {
     setEditinput(content)
   }
 
-  async function updateComment(id, content) {
-    setIsloading(true)
-    const res = await editComment(id, content)
-    if (res.message === "success") {
+  async function updateComment(id, content, postId) {
+    setUpdateCommentLoading(true)
+    const formdata = new FormData()
+    if (content) {
+      formdata.append("content", content)
+    }
+    const res = await editComment(id, formdata, postId)
+    if (res.message === "comment updated successfully") {
 
       getAllPosts()
       setCommentid(null)
-      setIsloading(false)
-    }
+      setUpdateCommentLoading(false)
+      getPostCommentss(postId)
 
+    }
+    setUpdateCommentLoading(false)
   }
 
   async function deletepostt(id) {
@@ -87,7 +116,7 @@ export default function Feed() {
       <div className='container mx-auto px-3 sm:px-3 my-3 lg:w-3/4'>
         <Ceatepost callback={getAllPostss} />
 
-        {posts.length === 0 && x.map((fv, index) =>
+        {posts?.length === 0 && x.map((fv, index) =>
 
           <div key={index} className="skeleton-post">
             <div className="skeleton-header">
@@ -105,6 +134,8 @@ export default function Feed() {
         )}
 
         {posts?.map((data) =>
+
+          // <h1>hello</h1>
           <div key={data.id} className="bg-white w-full rounded-md shadow-md h-auto py-3 px-3 my-5">
             <div className="w-full h-16 flex items-center  justify-between ">
               <div className="flex">
@@ -122,7 +153,7 @@ export default function Feed() {
                 </div>
               </div>
 
-              {data.user._id === userdetailes._id && <Dropdown>
+              {data.user._id === userdetailes.id && <Dropdown>
                 <DropdownTrigger>
                   <svg
                     className="w-16 cursor-pointer outline-none"
@@ -199,11 +230,9 @@ export default function Feed() {
               </div>
               <div className="w-full flex justify-between">
 
-                <p className="ml-3 text-gray-500">8</p>
-                <Link to={`/post-detailes/${data.id}`}>
+                <p className="ml-3 text-gray-500">{data.likesCount}</p>
 
-                  <p className="ml-3 text-gray-500">{data.comments.length} comments</p>
-                </Link>
+                <p onClick={() => getPostCommentss(data.id)} className="ml-3 cursor-pointer text-gray-500">{data.commentsCount} comments</p>
               </div>
             </div>
 
@@ -265,21 +294,97 @@ export default function Feed() {
             <Form onSubmit={() => createNewComment(comment, data.id)} className='flex gap-2 items-center my-2'>
               <Input
                 type='text'
-                value={comment}
+
+                value={postId === data.id ? comment : ""}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Type comment..."
                 variant='bordered'
-
+                onFocus={() => setPostid(data.id)}
 
               />
-              <Button type="submit" className='bg-primary text-white'>Create</Button>
+
+              {createCommentLoading && postId === data.id ? <Loadingbutton /> : <Button type="submit" className='bg-primary text-white'>Create</Button>
+              }
             </Form>
 
 
-            {data?.comments.length > 0 &&
+            {postComments?.length > 0 && postComments[0].post === data.id &&
 
               <div className='bg-gray-100 rounded-xl p-2 rounded-2xl'>
-                <div className='flex justify-between items-center'>
+
+                {postComments.map((comm) =>
+                  <>
+                    {/* <h1>omar</h1> */}
+                   <div className='bg-white p-3 rounded-2xl'>
+                     <div className='flex justify-between items-center rounded-xl '>
+
+
+                      <div className="flex py-2">
+
+
+                        <img onError={(e) => e.target.src = commentImg}
+                          className=" rounded-full w-10 h-10 mr-3"
+                          src={comm.commentCreator.photo}
+                          alt=""
+                        />
+                        <div>
+                          <h3 className="text-md font-semibold ">{comm.commentCreator.name}</h3>
+                          <p className="text-xs text-gray-500">{new Date(comm.createdAt).toLocaleString()}</p>
+                        </div>
+                      </div>
+
+                      {comm.commentCreator._id === userdetailes.id && data.user._id === userdetailes.id && <Dropdown>
+                        <DropdownTrigger>
+                          <svg
+                            className="w-16 cursor-pointer outline-none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={27}
+                            height={27}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#b0b0b0"
+                            strokeWidth={2}
+                            strokeLinecap="square"
+                            strokeLinejoin="round"
+                          >
+                            <circle cx={12} cy={12} r={1} />
+                            <circle cx={19} cy={12} r={1} />
+                            <circle cx={5} cy={12} r={1} />
+                          </svg>
+                        </DropdownTrigger>
+                        <DropdownMenu aria-label="Static  Actions">
+
+                          <DropdownItem onClick={() => handleEditInput(comm._id, comm.content)} key="edit" >Edit </DropdownItem>
+                          <DropdownItem key="delete" className="text-danger" onClick={() => deletecommentt(comm._id, comm.post)} color="danger">
+                            Delete
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>}
+
+
+                    </div>
+                    <p className=' text-sm ms-10 px-3 '>{comm.content}</p>
+                   </div>
+
+                    {comm._id === commentId && <Form onSubmit={() => updateComment(comm._id, editinput, comm.post)} className='flex gap-2 items-center my-2'>
+                      <Input
+                        type='text'
+
+                        variant='bordered'
+                        value={editinput}
+                        onChange={(e) => setEditinput(e.target.value)}
+
+                      />
+                      {updateCommentLoading && comm._id === commentId ? <Loadingbutton /> : <Button type="submit" className='bg-primary text-white'>  Update</Button>}
+                     
+                    </Form>}
+                  </>
+
+
+
+                )}
+
+                {/* <div className='flex justify-between items-center'>
 
 
                   <div className="flex py-2">
@@ -338,9 +443,9 @@ export default function Feed() {
 
                   />
                   <Button type="submit" className='bg-primary text-white'>  Update</Button>
-                </Form>}
+                </Form>} */}
 
-                
+
 
               </div>}
           </div>

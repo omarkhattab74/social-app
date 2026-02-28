@@ -6,37 +6,39 @@ import { Helmet } from 'react-helmet';
 
 export default function Profile() {
 
- 
+  const {getUserdata, userdetailes, setUserDetailes} =useContext(userdata)
 
   // const { userdetailes, getUserdata } = useContext(userdata)
-  const [userdetailess, setUserdetailess] = useState("")
+  // const [userdetailess, setUserdetailess] = useState("")
   const [image, setImage] = useState("")
   const [imageurl, setImageurl] = useState(null)
   let [isLoading, setIsloading] = useState(false)
 
-  async function getUserdata() {
-        try {
-            const { data } = await axios.get("https://linked-posts.routemisr.com/users/profile-data", {
-                headers: {
-                    token: localStorage.getItem("userToken")
-                }
-            })
-            setUserdetailess(data.user)
-            // return data.user
-        } catch (error) {
-            console.log(error);
-            return error
-        }
-    }
+  // async function getUserdata() {
+  //       try {
+  //           const { data } = await axios.get("https://linked-posts.routemisr.com/users/profile-data", {
+  //               headers: {
+  //                   token: localStorage.getItem("userToken")
+  //               }
+  //           })
+  //           setUserdetailess(data.user)
+  //           // return data.user
+  //       } catch (error) {
+  //           console.log(error);
+  //           return error
+  //       }
+  //   }
 
-   async function getUserDataa(){
-     await getUserdata()
-    }
+  //  async function getUserDataa(){
+  //    await getUserdata()
+  //   }
 
-    useEffect(()=>{
-      getUserDataa()
-    },[])
+    // useEffect(()=>{
+    //   getUserDataa()
+    // },[])
 
+    console.log("frpm profile", userdetailes);
+    
   function handleImage(e) {
     setImage(e.target.files[0])
     setImageurl(URL.createObjectURL(e.target.files[0]))
@@ -53,7 +55,7 @@ export default function Profile() {
     form.append("photo", image)
 
     try {
-      const { data } = await axios.put("https://linked-posts.routemisr.com/users/upload-photo", form,
+      const { data } = await axios.put("https://route-posts.routemisr.com/users/upload-photo", form,
         {
           headers: {
             token: localStorage.getItem("userToken")
@@ -82,7 +84,7 @@ export default function Profile() {
      <Helmet>
     <title>profile</title>
   </Helmet>
-      {userdetailess === "" && <div className="skeleton-post">
+      {userdetailes === "" ? <div className="skeleton-post">
         <div className="skeleton-header">
           <div className="skeleton-avatar"></div>
           <div className="skeleton-lines">
@@ -92,15 +94,12 @@ export default function Profile() {
         </div>
 
         <div className="skeleton-image"></div>
-      </div>}
-
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      </div> : <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white w-full max-w-md rounded-xl shadow-md p-6">
 
-          {/* User Photo */}
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-2">
             <img
-              src={userdetailess?.photo}
+              src={userdetailes?.photo}
               alt="user"
               className="w-28 h-28 rounded-full border-4 border-indigo-500"
             />
@@ -124,34 +123,34 @@ export default function Profile() {
           </form>
 
 
-          {/* Name */}
           <h2 className="text-center text-xl font-bold mt-4">
-            {userdetailess?.name}
+            {userdetailes?.name}
           </h2>
 
-          {/* Email */}
           <p className="text-center text-gray-500 text-sm">
-            {userdetailess?.email}
+            {userdetailes?.username}
+          </p>
+          <p className="text-center text-gray-500 text-sm">
+            {userdetailes?.email}
           </p>
 
-          {/* Divider */}
           <div className="border-t my-6"></div>
 
-          {/* Details */}
           <div className="space-y-4 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-500">Date of Birth</span>
-              <span className="font-medium">{userdetailess?.dateOfBirth?.slice(0, 10)}</span>
+              <span className="font-medium">{userdetailes?.dateOfBirth?.slice(0, 10)}</span>
             </div>
 
             <div className="flex justify-between">
               <span className="text-gray-500">Joined At</span>
-              <span className="font-medium">{userdetailess?.createdAt?.slice(0, 10)}</span>
+              <span className="font-medium">{userdetailes?.createdAt?.slice(0, 10)}</span>
             </div>
           </div>
 
         </div>
-      </div>
+      </div>}
+
     </>
   )
 }

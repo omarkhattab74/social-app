@@ -29,18 +29,20 @@ export default function Ceatepost({ callback }) {
     }
 
     try {
-      const { data } = await axios.post("https://linked-posts.routemisr.com/posts", formdata, {
+      const { data } = await axios.post("https://route-posts.routemisr.com/posts", formdata, {
         headers: {
           token: localStorage.getItem("userToken")
         }
       })
-      if (data.message === 'success') {
+      console.log(data);
+      
+      if (data.message === "post created successfully") {
         callback()
         setBody("")
         setImg(null)
         setImgUrl("")
         setIsloading(false)
-        toast.success("post added Successfully")
+        toast.success("post created Successfully")
       }
 
 
@@ -75,7 +77,7 @@ export default function Ceatepost({ callback }) {
               <input type="file" className='hidden' onChange={handleimg} />
             </label>
 
-            <button disabled={isLoading} className='bg-primary cursor-pointer text-white px-3 py-1 rounded-xl'>{isLoading && <span className="loader"></span>} Post</button>
+            <button disabled={isLoading || (body.length ===0 && imgUrl ==="")} className='bg-primary cursor-pointer text-white px-3 py-1 rounded-xl'>{isLoading && <span className="loader"></span>} Post</button>
           </div>
         </form>
       </div>

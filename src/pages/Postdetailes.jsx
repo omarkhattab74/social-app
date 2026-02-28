@@ -3,12 +3,13 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Form, useParams } from 'react-router-dom'
 import commentImg from '../assets/images.png'
 import { Button, Input } from '@heroui/react';
-import { createComment, deleteComment, editComment } from '../services/commentservices';
+import { createComment, deleteComment, editComment, getPostComments } from '../services/commentservices';
 import { Postscontext } from '../context/postsContext';
 import { userdata } from '../context/Userdtacontext';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/react'
 import { deletePost } from '../services/deletePost';
 import { Helmet } from 'react-helmet';
+import Loadingbutton from '../componentes/Loadingbutton';
 
 export default function Postdetailes() {
 
@@ -20,28 +21,40 @@ export default function Postdetailes() {
   let [commentId, setCommentid] = useState(null)
   let [editinput, setEditinput] = useState("")
   let [design, setDesign] = useState(true)
+  let [postComments, setPostComments] = useState([])
+  let [creatCommentLoading, setCreateCommentloading] = useState(false)
+  let [updateCommentLoading, setUpdateCommentloading] = useState(false)
 
   const x = useParams()
 
   async function getpostdetails() {
     try {
-      const response = await axios.get(`https://linked-posts.routemisr.com/posts/${x.id}`, {
+      const response = await axios.get(`https://route-posts.routemisr.com/posts/${x.id}`, {
         headers: {
           token: localStorage.getItem("userToken")
         }
       })
 
 
+      console.log("from post detailes", response.data?.data.post);
 
-      setPostdetailes(response.data?.post)
+      setPostdetailes(response.data?.data.post)
     } catch (error) {
       console.log(error);
 
     }
   }
 
-  function pstDtl(params) {
+  function pstDtl() {
     getpostdetails()
+    getPostCommentss(x)
+  }
+
+  async function getPostCommentss(x) {
+    const comments = await getPostComments(x.id)
+    console.log("from post detailesssssss", comments);
+    setPostComments(comments?.data.comments)
+
   }
 
   useEffect(() =>
@@ -50,13 +63,23 @@ export default function Postdetailes() {
     , [])
 
   async function createNewComment(comment, postid) {
-    const response = await createComment(comment, postid)
+    setCreateCommentloading(true)
+    const formdata = new FormData()
+    if (comment) {
+      formdata.append("content", comment)
+
+    }
+    const response = await createComment(formdata, postid)
     getpostdetails()
+    getPostCommentss(x)
+    setComment("")
+    setCreateCommentloading(false)
   }
 
-  async function deletecommentt(id) {
-    await deleteComment(id)
+  async function deletecommentt(id, postId) {
+    await deleteComment(id, postId)
     getpostdetails()
+    getPostCommentss(x)
   }
 
   function handleEditInput(id, content) {
@@ -64,14 +87,21 @@ export default function Postdetailes() {
     setEditinput(content)
   }
 
-  async function updateComment(id, content) {
-    const res = await editComment(id, content)
-    if (res.message === "success") {
+  async function updateComment(id, content, postId) {
+    setUpdateCommentloading(true)
+    const formdata = new FormData()
+    if (content) {
+      formdata.append("content", content)
+    }
+    const res = await editComment(id, formdata, postId)
+    setUpdateCommentloading(false)
+    if (res.message === "comment updated successfully") {
 
       getpostdetails()
       setCommentid(null)
-    }
+      getPostCommentss(x)
 
+    }
   }
 
   async function deletePostt(id) {
@@ -85,9 +115,9 @@ export default function Postdetailes() {
   return (
     <>
 
-<Helmet>
-    <title>postdetailes</title>
-  </Helmet>
+      <Helmet>
+        <title>postdetailes</title>
+      </Helmet>
 
       {postdeatails === "" &&
         <>
@@ -202,8 +232,8 @@ export default function Postdetailes() {
               </svg>
             </div>
             <div className="w-full flex justify-between">
-              <p className="ml-3 text-gray-500">8</p>
-              <p className="ml-3 text-gray-500">{postdeatails?.comments?.length} comments</p>
+              <p className="ml-3 text-gray-500">{postdeatails?.likesCount}</p>
+              <p className="ml-3 text-gray-500">{postdeatails?.commentsCount} comments</p>
             </div>
           </div>
 
@@ -272,17 +302,19 @@ export default function Postdetailes() {
 
 
             />
-            <Button type="submit" className='bg-primary text-white'>Create</Button>
+
+            {creatCommentLoading ? <Loadingbutton/> : <Button type="submit" className='bg-primary text-white'>Create</Button>}
+            
           </Form>
 
         </div>
 
-          <div className=''>
+          <div className='mt-4'>
 
-            {postdeatails?.comments?.map((comment) =>
+            {postComments?.map((comment) =>
 
 
-              <div key={comment?._id} className='bg-gray-100 mb-2 p-2 rounded-2xl'>
+              <div key={comment?._id} className='bg-gray-50  mb-2 p-2 rounded-2xl'>
                 <div className="flex justify-between items-center">
                   <div className="flex ">
                     <img onError={(e) => e.target.src = commentImg}
@@ -291,8 +323,8 @@ export default function Postdetailes() {
                       alt=""
                     />
                     <div>
-                      <h3 className="text-md font-semibold ">{comment.commentCreator.name}</h3>
-                      <p className="text-xs text-gray-500">{new Date(comment.createdAt).toLocaleString()}</p>
+                      <h3 className="text-md font-semibold ">{comment?.commentCreator.name}</h3>
+                      <p className="text-xs text-gray-500">{new Date(comment?.createdAt).toLocaleString()}</p>
                     </div>
                   </div>
 
@@ -318,7 +350,7 @@ export default function Postdetailes() {
                     <DropdownMenu aria-label="Static  Actions">
 
                       <DropdownItem onClick={() => handleEditInput(comment?._id, comment.content)} key="edit">Edit </DropdownItem>
-                      <DropdownItem key="delete" onClick={() => deletecommentt(comment._id)} className="text-danger" color="danger">
+                      <DropdownItem key="delete" onClick={() => deletecommentt(comment._id, comment.post)} className="text-danger" color="danger">
                         Delete
                       </DropdownItem>
                     </DropdownMenu>
@@ -327,18 +359,20 @@ export default function Postdetailes() {
 
                 </div>
 
-                <p className='text-xl my-2 px-10'>{comment?.content}</p>
+                <p className='text-sm my-2 ms-6 px-7'>{comment?.content}</p>
 
-                {comment._id === commentId && <Form onSubmit={() => updateComment(comment._id, editinput)} className='flex gap-2 items-center my-2'>
+                {comment._id === commentId && <Form onSubmit={() => updateComment(comment._id, editinput, comment.post)} className='flex gap-2 items-center my-2'>
                   <Input
                     type='text'
 
-                    variant='bordered'
+                    // variant='bordered'
                     value={editinput}
                     onChange={(e) => setEditinput(e.target.value)}
+                    className='ms-10'
 
                   />
-                  <Button type="submit" className='bg-primary text-white'>Update</Button>
+                  {updateCommentLoading ? <Loadingbutton/> :   <Button type="submit" className='bg-primary text-white'>Update</Button> }
+                
                 </Form>}
 
               </div>

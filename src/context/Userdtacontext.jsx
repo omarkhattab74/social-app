@@ -11,18 +11,18 @@ export default function Userdtacontextprovider(props) {
 
  async function getUserdata() {
         try {
-            const { data } = await axios.get("https://linked-posts.routemisr.com/users/profile-data", {
+            const { data } = await axios.get("https://route-posts.routemisr.com/users/profile-data", {
                 headers: {
                     token: localStorage.getItem("userToken")
                 }
             })
-            // console.log(data.user);
+            console.log(data.data);
 
-            setUserDetailes(data?.user)
-            return data.user
+            setUserDetailes(data?.data.user)
+            // return data.user
         } catch (error) {
             console.log(error);
-            return error
+            // return error
         }
     }
 
@@ -32,25 +32,27 @@ export default function Userdtacontextprovider(props) {
 
     }
 
-    // useEffect(() => {
-       
-      
-            
-    //         getuserdetails()
-        
-
-        
-    // },[] )
-
     useEffect(() => {
        
-        if (islogedin) {
+      if (localStorage.getItem("userToken")) {
+        
+          getuserdetails()
+      }
             
-            getuserdetails()
-        }
+        
 
         
-    },[islogedin] )
+    },[] )
+
+    // useEffect(() => {
+       
+    //     if (islogedin) {
+            
+    //         getuserdetails()
+    //     }
+
+        
+    // },[islogedin] )
 
 
 

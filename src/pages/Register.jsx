@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet';
 
 const schema = zod.object({
   name: zod.string().nonempty("name is required").min(3, "name at least 3 characters").regex(/^[a-zA-Z\s]+$/, "name must be only letters").max(20, "name must be at most 20 characters"),
+  username: zod.string().nonempty("Username is required").regex(/^[a-z0-9_]{3,30}$/,"Invalid Username").min(3, "Username at least 3 characters").max(30, "Username must be at most 30 characters"),
   email: zod.string().nonempty("email is raequired").regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "email is not valid"),
   password: zod.string().nonempty("password is required").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "weak password "),
   rePassword: zod.string().nonempty("repassword is required"),
@@ -36,7 +37,8 @@ export default function Register() {
       password: "",
       rePassword: "",
       dateOfBirth: "",
-      gender: ""
+      gender: "",
+      username:""
     },
     resolver: zodResolver(schema),
     mode: "onBlur"
@@ -48,21 +50,25 @@ export default function Register() {
     setLoad(true)
     const res = await signUp(data)
     setLoad(false)
-    if (res.message) {
+    // console.log(res);
+    
+    if (res.message === "account created") {
       navigate("/login")
     } else {
-      setapiError(res.error)
+      setapiError(res.errors)
+
     }
   }
   return (
     <>
-     <Helmet>
+      <Helmet>
         <title>register</title>
       </Helmet>
-      <div className='bg-white py-10 shadow-2xl rounded-2xl min-w-md'>
+      <div className='bg-white py-10 shadow-2xl mt-10 rounded-2xl min-w-md'>
         <h1 className='text-2xl text-center mb-4'>Register Now</h1>
         <form onSubmit={handleSubmit(sendData)} className='flex flex-col gap-4 px-12 sm:px-4'>
           <Input label="Name" type="text" isInvalid={Boolean(errors.name && touchedFields.name)} errorMessage={errors.name?.message} variant='bordered' {...register("name")} />
+          <Input label="Username" type="text" isInvalid={Boolean(errors.username && touchedFields.username)} errorMessage={errors.username?.message} variant='bordered' {...register("username")} />
           <Input label="Email" type="email" isInvalid={Boolean(errors.email && touchedFields.email)} errorMessage={errors.email?.message} variant='bordered' {...register("email")} />
           <Input label="Password" type="password" isInvalid={Boolean(errors.password && touchedFields.password)} errorMessage={errors.password?.message} variant='bordered' {...register("password")} />
           <Input label="Repassword" type="password" isInvalid={Boolean(errors.rePassword && touchedFields.rePassword)} errorMessage={errors.rePassword?.message} variant='bordered' {...register("rePassword")} />

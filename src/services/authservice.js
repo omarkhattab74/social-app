@@ -3,7 +3,7 @@ import axios from "axios";
 export async function signUp(data){
     
     try{
-        const response = await axios.post('https://linked-posts.routemisr.com/users/signup', data)
+        const response = await axios.post('https://route-posts.routemisr.com/users/signup', data)
     // console.log(data.message);
     return response.data;
         // console.log(response);
@@ -20,12 +20,12 @@ export async function signUp(data){
 
  export async function login(loginData) {
     try {
-         const response= await axios.post("https://linked-posts.routemisr.com/users/signin",loginData)
+         const response= await axios.post("https://route-posts.routemisr.com/users/signin",loginData)
 //    console.log(response.data.message);
    return response.data
     } catch (error) {
         // console.log(error.response.data.error);
-        return error.response.data.error
+        return error.response.data
         
     }
   
