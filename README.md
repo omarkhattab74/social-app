@@ -47,9 +47,9 @@ Installation
 
 🧠 Future Features
 
-· add Like for posts and comments
-· add reply
-· add follow to users 
+· add Like for posts and comments  
+· add reply  
+· add follow to users   
 
 🤝 Contributing
 
