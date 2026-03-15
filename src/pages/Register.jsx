@@ -9,9 +9,9 @@ import { Helmet } from 'react-helmet';
 
 const schema = zod.object({
   name: zod.string().nonempty("name is required").min(3, "name at least 3 characters").regex(/^[a-zA-Z\s]+$/, "name must be only letters").max(20, "name must be at most 20 characters"),
-  username: zod.string().nonempty("Username is required").regex(/^[a-z0-9_]{3,30}$/,"Invalid Username").min(3, "Username at least 3 characters").max(30, "Username must be at most 30 characters"),
-  email: zod.string().nonempty("email is raequired").regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "email is not valid"),
-  password: zod.string().nonempty("password is required").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "weak password "),
+  username: zod.string().nonempty("Username is required").regex(/^[a-z0-9_]{3,30}$/,"Username must be only lowercase letters, numbers, and underscores").min(3, "Username at least 3 characters").max(30, "Username must be at most 30 characters"),
+  email: zod.string().nonempty("email is required").regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "email is not valid"),
+  password: zod.string().nonempty("password is required").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "password must contain at least one uppercase letter, one lowercase letter, one number, and one special character and be at least 8 characters"),
   rePassword: zod.string().nonempty("repassword is required"),
   dateOfBirth: zod.coerce.date("date of birth is required").refine((value) => {
     const today = new Date().getFullYear();
@@ -62,7 +62,7 @@ export default function Register() {
       <Helmet>
         <title>register</title>
       </Helmet>
-      <div className='bg-white py-10 shadow-2xl mt-10 rounded-2xl min-w-md'>
+      <div className='bg-white py-10 shadow-2xl mt-10 rounded-2xl w-full md:max-w-md '>
         <h1 className='text-2xl text-center mb-4'>Register Now</h1>
         <form onSubmit={handleSubmit(sendData)} className='flex flex-col gap-4 px-12 sm:px-4'>
           <Input label="Name" type="text" isInvalid={Boolean(errors.name && touchedFields.name)} errorMessage={errors.name?.message} variant='bordered' {...register("name")} />

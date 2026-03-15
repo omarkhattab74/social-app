@@ -32,7 +32,7 @@ export default function Feed() {
   async function getAllPosts() {
     let res = await getPosts()
 
-    setPosts(res.data.data.posts)
+    setPosts(res?.data?.data.posts)
   }
 
   function getAllPostss() {
